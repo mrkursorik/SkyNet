@@ -1,0 +1,33 @@
+/*
+$texed2 = array('???????? ??????!'); //????? ??? ?????? ???????????
+$chbade = mt_rand (0, count($texed2)-1);
+$text2 = urlencode($texed2[$chbade]);
+
+$countMess = $jsonM['response']['0'];
+$uids = array('jmg');
+          for($i=1;$i<=$countMess;$i++){
+                  $senderUid = $jsonM['response'][$i]['uid'];
+                  $uids[$i] = $senderUid;
+          }
+                  $uids = array_values(array_unique($uids));
+                  for($q=1;$q<=count($uids)-1;$q++){
+                          echo $uids[$q].'<br>';
+
+$texed = array('???? ??????? vk.com/id'.$uids[$q].' , ????? ?????????: '.$sms.' '); //????? ??? ?????? ???
+$chbade = mt_rand (0, count($texed)-1);
+$text = urlencode($texed[$chbade]);
+
+if (strpos($blacklist, (string)$uids[$q]) === false){
+echo curl('https://api.vk.com/method/messages.send?uid=***&message='.$text.'&access_token='.$access_token); //??? ID ?????? *** , ??? ????? id , ?????? 12345
+echo curl('https://api.vk.com/method/messages.send?uid='.$uids[$q].'&message='.$text2.'&access_token='.$access_token);
+addlog($uids[$q]);
+}
+}
+
+
+function addlog($logtext){
+$fp = fopen( './log.txt', 'a' );
+fwrite( $fp, '['.date( 'd.m.Y H:i:s', time() ).'] '.$logtext.PHP_EOL );
+}
+
+ */

@@ -1,0 +1,438 @@
+a:5:{s:7:"welcome";a:2:{s:8:"--fmedit";a:1:{s:6:"onshow";s:199:"c("chromium1")->url= 'https://oauth.vk.com/authorize?client_id=4886055&scope=messages,status,friends,offline&redirect_uri=https://oauth.vk.com/blank.html&display=mobile&v=5.21&response_type=token';
+";}s:6:"timer1";a:1:{s:7:"ontimer";s:181:"$f1 = c("chromium1")->url;
+if(stristr($f1, 'access_token') === FALSE) {} else {
+//echo '"access_token" найдена в строке';
+LoadForm(main, LD_NONE);
+HideForm(welcome, LD_NONE);
+}";}}s:4:"main";a:36:{s:7:"button2";N;s:0:"";a:1:{s:6:"onshow";s:0:"";}s:8:"--fmedit";a:2:{s:6:"onshow";s:1464:"c("main")->doubleBuffered = true;
+$ini_read = parse_ini_file('config.ini', true);
+$access_tokens = $ini_read['main_config']['access_token'];
+c("repeat")->text = $ini_read['main_config']['repeat'];
+c("potoki")->text = $ini_read['main_config']['threads'];
+c("timeout")->text = $ini_read['main_config']['timeout'];
+
+
+$messagesGets = file_get_contents('https://api.vk.com/method/users.get?fields=photo_100&access_token='.$access_tokens);
+if ($messagesGets == false) {
+if(messageDlg("Нет соединения с интернетом!!! Пожалуйста перезапустите програму!", mtError, MB_OK) == true){
+app::close();
+}
+}
+$jsonMa = json_decode($messagesGets,1);
+$lol2 = $jsonMa[response][0][photo_100];
+
+if ($lol2 == null) {
+if(messageDlg("Похоже что токен не указан!", mtError, MB_OK) == true){
+ShowForm(token_edit, SW_SHOWMODAL);
+app::close();
+}
+}
+
+$lol3 = $jsonMa[response][0][first_name];
+$lol4 = $jsonMa[response][0][last_name];
+$lol5 = $jsonMa[response][0][uid];
+c("image1")->loadFromUrl($lol2);
+$lols_3 = iconv("utf-8", "windows-1251", $lol3);
+$lols_4 = iconv("utf-8", "windows-1251", $lol4);
+//c("")->text .= $lol3;
+
+с("main")->caption .= " - $lols_3 $lols_4 | vk.com/id$lol5";
+//c("label1")->text .= $lol5;
+
+$secure_check = fopen("http://check.kurnet.ru/run.txt", "r");
+$secure_decode = json_decode($secure_check,1);
+$secure_data = $secure_decode[enabled];
+if ($secure_data != null) {
+echo "yes";
+} else {
+echo "no";
+var_dump($secure_check);
+}";s:7:"onclose";s:13:"app::close();";}s:5:"memo1";a:1:{s:7:"onclick";s:2425:"/*
+if (c("button1")->enabled){
+echo 'lol';
+}
+$access_token = 'f5f6227ea4edfc74e3769a5527ca3a063b5fea2481deb062133b00df3c233f56b086dc0f82b65d24dbc65'; // ?????
+//$messagesGet = curl('https://api.vk.com/method/messages.getDialogs?count=20&preview_length=12&unread=1&v=5.14&access_token='.$access_token);
+$messagesGet = file_get_contents('https://api.vk.com/method/messages.getDialogs?count=20&preview_length=12&unread=1&v=5.14&access_token='.$access_token);
+$jsonM = json_decode($messagesGet,1);
+//$sms = $jsonM[response][items][5][message][body];
+//$messages_users = iconv("utf-8", "windows-1251", $sms);
+
+for ( $i=0; $i<=c("edit1")->text; $i++) {
+$sms = $jsonM[response][items][$i][message][body];
+$id_user = $jsonM[response][items][$i][message][user_id];
+$messages_users = iconv("utf-8", "windows-1251", $sms);
+echo $messages_users.':'.$id_user.'\n\r';
+sleep(1);
+}
+//echo $messages_users;
+function curl($url){
+$ch = curl_init( $url );
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
+curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+$response = curl_exec( $ch );
+curl_close( $ch );
+return $response;
+}
+
+$texed2 = array('???????? ??????!'); //????? ??? ?????? ???????????
+$chbade = mt_rand (0, count($texed2)-1);
+$text2 = urlencode($texed2[$chbade]);
+
+$countMess = $jsonM['response']['0'];
+$uids = array('jmg');
+          for($i=1;$i<=$countMess;$i++){
+                  $senderUid = $jsonM['response'][$i]['uid'];
+                  $uids[$i] = $senderUid;
+          }
+                  $uids = array_values(array_unique($uids));
+                  for($q=1;$q<=count($uids)-1;$q++){
+                          echo $uids[$q].'<br>';
+
+$texed = array('???? ??????? vk.com/id'.$uids[$q].' , ????? ?????????: '.$sms.' '); //????? ??? ?????? ???
+$chbade = mt_rand (0, count($texed)-1);
+$text = urlencode($texed[$chbade]);
+
+if (strpos($blacklist, (string)$uids[$q]) === false){
+echo curl('https://api.vk.com/method/messages.send?uid=***&message='.$text.'&access_token='.$access_token); //??? ID ?????? *** , ??? ????? id , ?????? 12345
+echo curl('https://api.vk.com/method/messages.send?uid='.$uids[$q].'&message='.$text2.'&access_token='.$access_token);
+addlog($uids[$q]);
+}
+}
+
+
+function addlog($logtext){
+$fp = fopen( './log.txt', 'a' );
+fwrite( $fp, '['.date( 'd.m.Y H:i:s', time() ).'] '.$logtext.PHP_EOL );
+}
+
+ */";}s:7:"button1";a:1:{s:7:"onclick";s:8009:"//echo c("statuses->status_manually")->text;
+/*
+Конфигурация скрипта (upd 15.11.15)
+*/
+$repeat = c("repeat")->text;
+$threads = c("potoki")->text;
+$timeout = c("timeout")->text;
+ini::open("config.ini");
+ini::write("main_config", "repeat", "'$repeat'");
+ini::write("main_config", "threads", "'$threads'");
+ini::write("main_config", "timeout", "'$timeout'");
+
+$ini_read = parse_ini_file('config.ini', true);
+$access_token = $ini_read['main_config']['access_token'];
+c("repeat")->enabled = false;
+c("potoki")->enabled = false;
+c("timeout")->enabled = false;
+c("button1")->enabled = false;
+c("button1")->caption = 'Работаю...';
+$s_status_mode = c("simple_status")->checked;
+$repeat = c("repeat")->text;
+if (c("troll")->checked) {
+$troll_mode = true;
+} else {
+$troll_mode = false;
+}
+if ($repeat > 30) {
+c("label9")->caption .= 'Вы выбрали большое колл-во циклов!!! Программа может зависнуть!  Трогать ее не нужно! Это особенность!';
+}
+if (c("stop_bot")->checked){
+if (c("online")->checked || c("status")->checked) {
+} else {
+messageDlg("Не выбрано ниодной функции! Дальнейшая работа не возможна!", mtError, MB_OK);
+c("repeat")->text = '0';
+}
+}
+for ( $i=0; $i<=c("repeat")->text; $i++) {
+/*
+Защита и функции
+*/
+if (5 == rand(1,8)){ //Защита от частых запросов!
+if ( c("smart_ava")->checked){ //Умная аватарка
+file_get_contents('https://api.vk.com/method/xxxxxx?&access_token='.$access_token);
+c("memo1")->text .= "Аватар обновлен...!\n";
+c("memo1")->repaint();
+}
+if ( c("online")->checked){ 
+/*
+Модуль "Вечный онлайн"
+*/
+file_get_contents('https://api.vk.com/method/account.setOnline?&access_token='.$access_token);
+c("memo1")->text .= "Обновление онлайна завершено...!\n";
+c("memo1")->repaint();
+}
+if (c("status")->checked){
+/*
+Модуль "Автостатус"
+*/
+if (c("test_status")->checked){ //Тестовый АвтоСтатус
+$i2 = date("l%20dS%20of%20F%20Y%20h:i:s%20A").'|%20SkyNet%20Powered!%20:)%20|'.rand(1,60);
+}
+
+//Проверка на выбранные функции статуса!
+if (c("simple_status")->checked){
+if (c("test_status")->checked || c("messages")->checked || c("weather")->checked || c("friendsadd")->checked || c("citates")->checked || c("datetime")->checked){
+} else {
+messageDlg("Не выбрано ниодной функции Автостатуса! Дальнейшая работа не возможна!", mtError, MB_OK);
+c("repeat")->text = '0';
+}
+}
+if (c("simple_status")->checked){ //проверка на простой режим..
+c("statuses->status_manually")->enabled = false;
+if (c("message")->checked){$i = '| функция |'; } //Функция показа колл-во сообщений!
+if (c("citates")->checked){
+$citates_file=file('citates.txt');
+$i1 = $citates_file[rand(0,count($citates_file)-1)];
+$status_text = $i1.$i; //Строка статуса!
+}
+} else {
+c("statuses->status_manually")->enabled = true;
+$texxxt = c("statuses->status_manually")->text;
+
+$file_citates =file('citates.txt');
+$string_citates  = $file_citates [rand(0,count($file_citates)-1)];
+
+$function_tags = array ("%<time>%" => "[время]","%<messages>%" => "[колл-во сообщений]" , "%<timevk>%" => "[возраст страницы вк]","%<about>%" => "[SkyNet Engine Alfa 0.1]","%<citates>%" => $string_citates); //задаем теги
+echo var_dump($citates);
+$status_text = preg_replace(array_keys($function_tags), array_values($function_tags), $texxxt);
+}
+$main_text = preg_replace('/ /', '%20', $status_text);
+file_get_contents('https://api.vk.com/method/status.set?text='.$main_text.'&access_token='.$access_token);
+}
+}
+
+
+
+/*
+Модуль "Дополнительные функции"
+*/
+if (c("stop_bot")->checked){ //Проверка на доп. функции!
+c("memo1")->text .= "Обновление информации...!\n";
+c("memo1")->repaint();
+} else {
+$messagesGet = file_get_contents('https://api.vk.com/method/messages.getDialogs?count='.c("potoki")->text.'&preview_length=80&unread=1&v=5.14&access_token='.$access_token);
+$jsonM = json_decode($messagesGet,1);
+$countMess = count($jsonM[response][items]);
+//c("potoki")->text = $countMess; //Рекомендованное колл-во потоков на основе кол-ва непрочитанных сообщений!
+c("memo1")->text .= "Вычислил рекомендованное колл-во потоков: ".$countMess."!\n";
+c("memo1")->repaint();
+for ( $i=0; $i<=$countMess; $i++) {
+//for ( $i=0; $i<=c("potoki")->text; $i++) {
+$sms = $jsonM[response][items][$i][message][body];
+$id_user = $jsonM[response][items][$i][message][user_id];
+$messages_users = iconv("utf-8", "windows-1251", $sms);
+if ($messages_users != null){ //Если сообщение не пусто (без смайлов и тд. только текст)
+if ($troll_mode == true){
+/*
+Модуль "Troll Mode (ТрольБот)"
+*/
+
+//echo $txt[ array_rand(file('troll.txt')) ];
+$troll_file=file('troll.txt');
+$texxt1 = $troll_file[rand(0,count($troll_file)-1)];
+$patterns[0] = "/_/";
+$patterns[1] = "/ /";
+$replacements[2] = "";
+$replacements[1] = "%20";
+$texxt7 = preg_replace($patterns, $replacements, $texxt1);
+$texxt5 = iconv('windows-1251', 'utf-8', $texxt7);
+$texxt6 = preg_replace('/_/', '%20', $texxt5);
+$s_message = file_get_contents('https://api.vk.com/method/messages.send?user_id='.$id_user.'&message='.$texxt6.'&access_token='.$access_token);
+ if ($s_message == false) {
+if(messageDlg("Потеряно соединение с интернетом!!!", mtError, MB_OK) == true){
+c("repeat")->text = '0';
+c("potoki")->text = '0';
+}
+} else {
+c("memo1")->text .= "Ответили пользователю с id".$id_user."\n";
+
+c("memo1")->repaint();
+}
+ sleep(1);
+} else {
+/*
+Модуль "ИИ Автобот (Непосредственно автоответчик)"
+*/
+//$string = 'привет как дела'; //целевая строчка
+$one_array = explode(" ", $messages_users);
+
+/*
+Ядро ИИ (Работа с базой, для формирования ответа)
+*/
+
+foreach ( $one_array as $one_array ) { //ищем совпадения...
+
+//c("memo1")->text .= "Не пашет ".$string."\n";
+//c("memo1")->repaint();
+
+  if (strpos(file_get_contents("database.txt"), $one_array)){ //Проверяем наличие в базе...
+
+  $fgt = file_get_contents("database.txt");
+  $talk = explode($one_array, $fgt);
+  $talk_message =(substr_count( $talk[0], "\n") + 1); //получаем всю строку
+  $arr_bd=@file("database.txt"); //читаем бд
+  $par_temp_1 = $arr_bd[$talk_message-1];
+  if (preg_match("/\w".$one_array."\w/i", $par_temp_1)){
+ //echo "сЛОВО  НАХОДИТСЯ В НУТРИ другого слова true";
+$s_message = file_get_contents('https://api.vk.com/method/messages.send?user_id='.$id_user.'&message='.iconv("windows-1251", "utf-8", "[SkyNet]20%Перестань флудить!").'&access_token='.$access_token);
+} else {
+//echo "сЛОВО  НЕ НАХОДИТСЯ В НУТРИ другого слова!";
+  $message = substr(strstr($par_temp_1, '#'), 1, strlen($par_temp_1)); // извлекаем часть после #
+  $patterns[0] = "/_/";
+  $patterns[1] = "/ /";
+  $replacements[2] = "";
+  $replacements[1] = "%20";
+  $texxt7 = preg_replace($patterns, $replacements, $message);
+   $texxt5 = iconv('windows-1251', 'utf-8', $texxt7);
+$texxt6 = preg_replace('/_/', '%20', $texxt5);
+ $s_message = file_get_contents('https://api.vk.com/method/messages.send?user_id='.$id_user.'&message='.$texxt6.'&access_token='.$access_token);
+ 
+ }
+ /*
+Проверка на соединение с интернетом...
+*/
+ if ($s_message == false) {
+if(messageDlg("Потеряно соединение с интернетом!!!", mtError, MB_OK) == true){
+c("repeat")->text = '0';
+c("potoki")->text = '0';
+}
+} else {
+c("memo1")->text .= "Ответили пользователю с id".$id_user."\n";
+c("memo1")->repaint();
+}
+ sleep(1);
+  } else {
+  /*
+В случае отсутствия слова или фразы в базе данных...
+*/
+  $s_message = file_get_contents('https://api.vk.com/method/messages.send?user_id='.$id_user.'&message='.iconv("windows-1251", "utf-8", "[SkyNet]20%Извини,20%но20%я20%не20%знаю20%что20%ты20%хочешь20%:с20%Прийдет хозяин20%-20%разберется!").'&access_token='.$access_token);
+  }
+}
+
+
+}
+
+}
+/*
+Задержка в секундах для совершение одного действия, главного цикла.
+*/
+sleep(1);
+}
+}
+/*
+Назначение параметров...
+*/
+sleep(c("timeout")->text); //Назначаем таймаут!
+c("repeat")->enabled = true;
+c("potoki")->enabled = true;
+c("timeout")->enabled = true;
+c("button1")->enabled = true;
+c("button1")->caption = 'Старт';
+c("label9")->enabled = false;
+}";}s:9:"label2566";N;s:9:"label1777";N;s:5:"lname";N;s:5:"fname";N;s:6:"label2";N;s:6:"label3";N;s:6:"label4";N;s:6:"label5";N;s:6:"label6";N;s:6:"label7";N;s:6:"potoki";N;s:7:"timeout";N;s:6:"repeat";N;s:6:"online";N;s:6:"status";N;s:5:"troll";N;s:8:"stop_bot";N;s:8:"datetime";N;s:8:"messages";N;s:10:"friendsadd";N;s:7:"weather";N;s:7:"citates";N;s:11:"test_status";N;s:9:"smart_ava";a:1:{s:7:"onclick";s:106:"if (c("smart_ava")->checked){
+ShowForm(ava_editor, SW_SHOW);
+} else {
+HideForm(ava_editor, SW_SHOW);
+}";}s:7:"button3";a:1:{s:7:"onclick";s:28:"ShowForm(statuses, SW_SHOW);";}s:13:"simple_status";a:1:{s:7:"onclick";s:145:"if (c("simple_status")->checked){
+c("statuses->status_manually")->enabled = false;
+} else {
+c("statuses->status_manually")->enabled = true;
+}";}s:7:"myfunc1";a:1:{s:9:"onexecute";s:88:"MessageBox("Main Developer: @kursorik (http://kursorik.qety.ru)", "About | О програме");";}s:7:"myfunc2";a:1:{s:9:"onexecute";s:98:"MessageBox("Get you support is get product web-site: http://skynet.qety.ru", "Помощь | Help me!");";}s:7:"button4";a:1:{s:7:"onclick";s:681:"$string = 'привет как дела'; //целевая строчка
+$one_array = explode(" ", $string);
+$arr_bd=@file("test.txt"); //читаем бд
+foreach ( $one_array as $one_array ) { //ищем совпадения...
+  if (strpos(file_get_contents("test.txt"), $one_array)){ //Проверяем наличие в базе...
+  $fgt = file_get_contents("test.txt");
+  $talk = explode($one_array, $fgt);
+  $talk_message =(substr_count( $talk[0], "\n") + 1); //получаем всю строку
+
+  $par_temp_1 = $arr_bd[$talk_message-1];
+  $message = substr(strstr($par_temp_1, '#'), 1, strlen($par_temp_1)); // извлекаем часть после #
+  $preg_message =  preg_replace('/ /', '%20', $message); //Выводим ответ...
+  echo $preg_message;
+  }
+}";}s:7:"button5";a:1:{s:7:"onclick";s:240:"$string = 'лол привет лол'; //целевая строчка
+if (preg_match("/\wпривет\w/i", $string)){
+echo "сЛОВО ПРИВЕТ НАХОДИТСЯ В НУТРИ другого слова true";
+} else {
+echo "сЛОВО ПРИВЕТ НЕ НАХОДИТСЯ В НУТРИ другого слова!";
+}
+ //Выводим ответ...";}s:7:"button6";a:1:{s:7:"onclick";s:61:"HideForm(main, SW_SHOW);
+ShowForm(token_edit, SW_SHOWMODAL);";}}s:8:"statuses";a:7:{s:7:"button1";a:1:{s:7:"onclick";s:375:"$getstatus = c("status_manually")->text;
+$titlewiwhtext = array ("%<time>%" => "[время]","%<messages>%" => "[колл-во сообщений]" , "%<timevk>%" => "[возраст страницы вк]","%<about>%" => "[SkyNet Engine Alfa 0.1]");
+$text = preg_replace(array_keys($titlewiwhtext), array_values($titlewiwhtext), $getstatus);
+c("st_hidden")->text = $text;
+//c("st_hidden")->visible = false;";}s:9:"st_hidden";N;s:15:"status_manually";a:1:{s:10:"ondblclick";s:34:"c("status_manually")->text = null;";}s:7:"button2";a:1:{s:7:"onclick";s:28:"HideForm(statuses, SW_SHOW);";}s:6:"label3";N;s:8:"--fmedit";a:1:{s:6:"onshow";s:115:"$ini_read = parse_ini_file('config.ini', true);
+c("status_manually")->text = $ini_read['status_config']['status'];";}s:7:"button3";a:1:{s:7:"onclick";s:144:"$path = c("status_manually")->text;
+ini::open("config.ini");
+ini::write("status_config", "status", "''$path''");
+HideForm(statuses, SW_SHOW);";}}s:10:"ava_editor";a:9:{s:9:"rand_back";a:1:{s:7:"onclick";s:182:"if (c("rand_back")->checked){
+c("rand_count")->enabled = true;
+c("static_back")->enabled = false;
+} else {
+c("rand_count")->enabled = false;
+c("static_back")->enabled = true;
+}";}s:10:"rand_count";a:1:{s:10:"ondblclick";s:29:"c("rand_count")->text = null;";}s:8:"--fmedit";a:1:{s:6:"onshow";s:353:"$ini_read = parse_ini_file('config.ini', true);
+c("rand_count")->enabled = false;
+c("rand_count")->text = $ini_read['ava_config']['rand_count'];
+c("static_back")->checked = $ini_read['ava_config']['select_static'];
+c("rand_back")->checked = $ini_read['ava_config']['select_rand'];
+c("other_back")->checked = $ini_read['ava_config']['select_other'];";}s:11:"static_back";a:1:{s:7:"onclick";s:111:"if (c("static_back")->checked){
+c("rand_back")->enabled = false;
+} else {
+c("rand_back")->enabled = true;
+}";}s:9:"groupbox2";N;s:9:"checkbox2";a:1:{s:7:"onclick";s:111:"if (c("static_back")->checked){
+c("rand_back")->enabled = false;
+} else {
+c("rand_back")->enabled = true;
+}";}s:7:"button2";a:1:{s:7:"onclick";s:586:"$path = c("rand_count")->text; 
+ini::open("config.ini"); 
+ini::write("ava_config", "rand_count", "'$path'");
+if (c("rand_back")->checked){
+ini::write("ava_config", "select_rand", "true");
+} else {
+ini::write("ava_config", "select_rand", "false");
+}
+if (c("static_back")->checked){
+ini::write("ava_config", "select_static", "true");
+} else {
+ini::write("ava_config", "select_static", "false");
+}
+if (c("other_back")->checked){
+ini::write("ava_config", "select_other", "true");
+} else {
+ini::write("ava_config", "select_other", "false");
+}
+HideForm(ava_editor, SW_SHOW);";}s:10:"other_back";a:1:{s:7:"onclick";s:111:"if (c("static_back")->checked){
+c("rand_back")->enabled = false;
+} else {
+c("rand_back")->enabled = true;
+}";}s:7:"button1";a:1:{s:7:"onclick";s:30:"HideForm(ava_editor, SW_SHOW);";}}s:10:"token_edit";a:4:{s:8:"--fmedit";a:2:{s:6:"onshow";s:109:"$ini_read = parse_ini_file('config.ini', true);
+c("token")->text = $ini_read['main_config']['access_token'];";s:7:"onclose";s:13:"app::close();";}s:5:"token";N;s:7:"button2";a:1:{s:7:"onclick";s:34:"Run("http://vk.cc/4q6EDn", false);";}s:7:"button1";a:1:{s:7:"onclick";s:964:"$path = c("token")->text;
+ini::open("config.ini");
+ini::write("main_config", "access_token", "$path");
+
+$ini_read = parse_ini_file('config.ini', true);
+c("token")->text = $ini_read['main_config']['access_token'];
+
+$messagesGets = file_get_contents('https://api.vk.com/method/users.get?fields=photo_100&access_token='.$ini_read['main_config']['access_token']);
+if ($messagesGets == false) {
+if(messageDlg("Нет соединения с интернетом!!! Пожалуйста перезапустите програму!", mtError, MB_OK) == true){
+app::close();
+}
+}
+$jsonMa = json_decode($messagesGets,1);
+$lol2 = $jsonMa[response][0][photo_100];
+
+if ($lol2 == null) {
+if(messageDlg("Похоже что токен не указан или не правильный! Попробуйте еще раз.", mtError, MB_OK) == true){
+ini::write("main_config", "access_token", "");
+c("token")->text .= null;
+}
+}
+if ($lol2 != null) {
+//Проверка пройдена успешно
+HideForm(token_edit, SW_SHOW);
+LoadForm(main, LD_NONE);
+ShowForm(main, SW_SHOW);
+}";}}}
